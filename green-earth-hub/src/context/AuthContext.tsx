@@ -6,6 +6,7 @@ interface User {
     id: string;
     fullName: string;
     mobileNo: string;
+    points: number;
 }
 
 interface AuthContextType {
@@ -13,6 +14,8 @@ interface AuthContextType {
     loading: boolean;
     login: (userData: User) => void;
     logout: () => void;
+    refreshUser: () => Promise<void>;
+    updateUserPoints: (newPoints: number) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,27 +24,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const checkAuth = async () => {
-            try {
-                const response = await fetch('http://localhost:5000/api/auth/me', {
-                    credentials: 'include',
-                });
+    const checkAuth = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/api/auth/me', {
+                credentials: 'include',
+            });
 
-                if (response.ok) {
-                    const userData = await response.json();
-                    setUser(userData);
-                } else {
-                    setUser(null);
-                }
-            } catch (error) {
-                console.error('Auth check failed:', error);
+            if (response.ok) {
+                const userData = await response.json();
+                setUser(userData);
+            } else {
                 setUser(null);
-            } finally {
-                setLoading(false);
             }
-        };
+        } catch (error) {
+            console.error('Auth check failed:', error);
+            setUser(null);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         checkAuth();
     }, []);
 
@@ -59,8 +62,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     };
 
+    const refreshUser = async () => {
+        await checkAuth();
+    };
+
+    const updateUserPoints = (newPoints: number) => {
+        if (user) {
+            setUser({ ...user, points: newPoints });
+        }
+    };
+
     return (
-        <AuthContext.Provider value={{ user, loading, login, logout }}>
+        <AuthContext.Provider value={{ user, loading, login, logout, refreshUser, updateUserPoints }}>
             {children}
         </AuthContext.Provider>
     );

@@ -1,7 +1,10 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Settings, LogOut, Bell, Shield, HelpCircle, ChevronRight } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 const ProfilePage = () => {
+  const { user, logout } = useAuth();
+
   return (
     <AppLayout>
       <div className="p-4 space-y-4">
@@ -10,20 +13,20 @@ const ProfilePage = () => {
           <div className="w-20 h-20 rounded-full bg-accent/20 flex items-center justify-center text-4xl mx-auto mb-4">
             ⚡
           </div>
-          <h1 className="text-xl font-bold text-foreground">Team Runtime</h1>
-          <p className="text-muted-foreground">Eco Guardian • Level 3</p>
-          
+          <h1 className="text-xl font-bold text-foreground">{user?.fullName || 'Eco Warrior'}</h1>
+          <p className="text-muted-foreground">{user?.mobileNo}</p>
+
           <div className="flex justify-center gap-6 mt-4 pt-4 border-t border-border">
             <div className="text-center">
-              <p className="text-2xl font-bold text-foreground">1,890</p>
+              <p className="text-2xl font-bold text-foreground">{user?.points || 0}</p>
               <p className="text-xs text-muted-foreground">Points</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-foreground">40 kg</p>
+              <p className="text-2xl font-bold text-foreground">0 kg</p>
               <p className="text-xs text-muted-foreground">CO₂ Saved</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-foreground">3</p>
+              <p className="text-2xl font-bold text-foreground">0</p>
               <p className="text-xs text-muted-foreground">Badges</p>
             </div>
           </div>
@@ -55,7 +58,10 @@ const ProfilePage = () => {
         </div>
 
         {/* Logout */}
-        <button className="w-full lisboa-card-soft flex items-center justify-center gap-2 text-destructive font-semibold">
+        <button
+          onClick={logout}
+          className="w-full lisboa-card-soft flex items-center justify-center gap-2 text-destructive font-semibold"
+        >
           <LogOut size={18} strokeWidth={2.5} />
           Sign Out
         </button>

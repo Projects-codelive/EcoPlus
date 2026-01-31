@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { icon: Home, label: 'Home', path: '/' },
+  { icon: Home, label: 'Home', path: '/dashboard' },
   { icon: Leaf, label: 'Track', path: '/track' },
   { icon: BookOpen, label: 'Learn', path: '/learn' },
   { icon: Trophy, label: 'Leaders', path: '/leaderboard' },
@@ -14,7 +14,7 @@ export const BottomNav = () => {
   const location = useLocation();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border px-4 pb-safe z-50">
+    <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border px-4 pb-safe z-50 md:hidden">
       <div className="flex items-center justify-around py-2">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;

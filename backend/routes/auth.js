@@ -41,7 +41,7 @@ router.post('/register', async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
 
-        res.status(201).json({ message: 'User registered successfully', user: { id: newUser._id, fullName: newUser.fullName, mobileNo: newUser.mobileNo } });
+        res.status(201).json({ message: 'User registered successfully', user: { id: newUser._id, fullName: newUser.fullName, mobileNo: newUser.mobileNo, points: newUser.points } });
 
     } catch (error) {
         console.error("Register Error:", error);
@@ -77,7 +77,7 @@ router.post('/login', async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
-        res.json({ message: 'Login successful', user: { id: user._id, fullName: user.fullName, mobileNo: user.mobileNo } });
+        res.json({ message: 'Login successful', user: { id: user._id, fullName: user.fullName, mobileNo: user.mobileNo, points: user.points } });
 
     } catch (error) {
         console.error("Login Error:", error);
@@ -99,7 +99,12 @@ router.get('/me', async (req, res) => {
             return res.status(401).json({ message: 'User not found' });
         }
 
-        res.json(user);
+        res.json({
+            id: user._id,
+            fullName: user.fullName,
+            mobileNo: user.mobileNo,
+            points: user.points
+        });
     } catch (error) {
         console.error("Auth Check Error:", error);
         res.status(401).json({ message: 'Invalid token' });

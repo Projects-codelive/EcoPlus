@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/auth.js';
+import quizRoutes from './routes/quiz.js';
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/quiz', quizRoutes);
 
 app.get('/', (req, res) => {
   res.send('Green Earth Hub Backend Running');

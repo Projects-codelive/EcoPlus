@@ -46,7 +46,7 @@ const LoginPage = () => {
 
             login(data.user);
             toast.success('Welcome back!');
-            navigate('/');
+            navigate('/dashboard');
         } catch (error: any) {
             toast.error(error.message);
         } finally {
