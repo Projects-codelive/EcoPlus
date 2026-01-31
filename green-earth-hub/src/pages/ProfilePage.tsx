@@ -1,9 +1,29 @@
+import { useState, useEffect } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Settings, LogOut, Bell, Shield, HelpCircle, ChevronRight } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
 const ProfilePage = () => {
   const { user, logout } = useAuth();
+  const [stats, setStats] = useState({ totalEmissions: 0, totalSaved: 0 });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/journey/stats', {
+          credentials: 'include'
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setStats(data);
+        }
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   return (
     <AppLayout>
@@ -22,7 +42,7 @@ const ProfilePage = () => {
               <p className="text-xs text-muted-foreground">Points</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-foreground">0 kg</p>
+              <p className="text-2xl font-bold text-foreground">{stats.totalSaved} kg</p>
               <p className="text-xs text-muted-foreground">CO₂ Saved</p>
             </div>
             <div className="text-center">

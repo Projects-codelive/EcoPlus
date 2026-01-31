@@ -1,23 +1,13 @@
+import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/context/AuthContext';
 
 interface User {
-  id: number;
+  id: string;
   name: string;
   avatar: string;
   score: number;
-  isCurrentUser?: boolean;
 }
-
-const users: User[] = [
-  { id: 1, name: 'Sarah Green', avatar: '🌿', score: 2450 },
-  { id: 2, name: 'Team Runtime', avatar: '⚡', score: 1890, isCurrentUser: true },
-  { id: 3, name: 'EcoWarrior42', avatar: '🌍', score: 1654 },
-  { id: 4, name: 'GreenThumb', avatar: '🌱', score: 1432 },
-  { id: 5, name: 'BikeLife', avatar: '🚴', score: 1298 },
-  { id: 6, name: 'SolarPower', avatar: '☀️', score: 1156 },
-  { id: 7, name: 'TreeHugger', avatar: '🌳', score: 1023 },
-  { id: 8, name: 'RecycleKing', avatar: '♻️', score: 876 },
-];
 
 const getRankBadge = (rank: number) => {
   switch (rank) {
@@ -33,17 +23,40 @@ const getRankBadge = (rank: number) => {
 };
 
 export const LeaderboardList = () => {
+  const { user: currentUser } = useAuth();
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/users/leaderboard');
+        if (response.ok) {
+          const data = await response.json();
+          setUsers(data);
+        }
+      } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+      }
+    };
+
+    fetchLeaderboard();
+  }, []);
+
   return (
     <div className="space-y-3">
       {users.map((user, index) => {
         const rank = index + 1;
-        
+        const isCurrentUser = currentUser?.id === user.id; // Assuming auth user has id (check context)
+        // Note: AuthContext usually provides user object with _id or id. Let's assume id based on typical usage or check AuthContext later if verification fails.
+        // Actually, let's verify AuthContext structure or just check if user.name matches if id is missing in context type defs? 
+        // Better: Assuming auth context user object has `id` property from my previous `verifyToken` /me response which returns { id, fullName... }
+
         return (
           <div
             key={user.id}
             className={cn(
               "leaderboard-row",
-              user.isCurrentUser && "ring-2 ring-accent"
+              isCurrentUser && "ring-2 ring-accent"
             )}
           >
             {/* Rank */}
@@ -63,11 +76,11 @@ export const LeaderboardList = () => {
             <div className="flex-1">
               <span className={cn(
                 "font-semibold",
-                user.isCurrentUser ? "text-coral" : "text-foreground"
+                isCurrentUser ? "text-coral" : "text-foreground"
               )}>
                 {user.name}
               </span>
-              {user.isCurrentUser && (
+              {isCurrentUser && (
                 <span className="ml-2 text-xs text-coral font-medium">(You)</span>
               )}
             </div>

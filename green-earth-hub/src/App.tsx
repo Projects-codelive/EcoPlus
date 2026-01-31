@@ -8,6 +8,8 @@ import TrackPage from "./pages/TrackPage";
 import LearnPage from "./pages/LearnPage";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import ProfilePage from "./pages/ProfilePage";
+import SocialPage from "./pages/SocialPage";
+import UserFeedPage from "./pages/UserFeedPage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import LandingPage from "./pages/LandingPage";
@@ -37,6 +39,8 @@ const App = () => (
               <Route path="/learn" element={<LearnPage />} />
               <Route path="/leaderboard" element={<LeaderboardPage />} />
               <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/social" element={<SocialPage />} />
+              <Route path="/social/user/:userId" element={<UserFeedPage />} />
             </Route>
 
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

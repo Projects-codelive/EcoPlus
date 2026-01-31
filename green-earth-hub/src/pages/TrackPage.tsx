@@ -1,12 +1,39 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { CarbonGauge } from '@/components/tracker/CarbonGauge';
 import { JourneyForm } from '@/components/tracker/JourneyForm';
 import { WeeklyChart } from '@/components/tracker/WeeklyChart';
 
 const TrackPage = () => {
-  const [currentEmissions] = useState(120);
-  const maxEmissions = 300;
+  const [currentEmissions, setCurrentEmissions] = useState(0);
+  const [liveEstimate, setLiveEstimate] = useState(0); // Real-time estimate from form
+  const maxEmissions = 15; // Range 0-15kg as requested
+
+  const fetchStats = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/journey/stats', {
+        credentials: 'include'
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setCurrentEmissions(data.totalEmissions);
+      }
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const handleJourneySaved = () => {
+    fetchStats(); // Update total from backend
+    setLiveEstimate(0); // Reset live estimate
+  };
+
+  // The gauge shows: History + Current Plan
+  const displayedEmissions = Math.round((currentEmissions + liveEstimate) * 100) / 100;
 
   return (
     <AppLayout>
@@ -17,8 +44,11 @@ const TrackPage = () => {
           <p className="text-muted-foreground">Monitor your environmental impact</p>
         </div>
 
-        <CarbonGauge value={currentEmissions} maxValue={maxEmissions} />
-        <JourneyForm />
+        <CarbonGauge value={displayedEmissions} maxValue={maxEmissions} />
+        <JourneyForm
+          onEmissionChange={setLiveEstimate}
+          onJourneySaved={handleJourneySaved}
+        />
         <WeeklyChart />
       </div>
     </AppLayout>
