@@ -16,7 +16,7 @@ import LandingPage from "./pages/LandingPage";
 import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
-// import ClimateMapPage from "./pages/ClimateMapPage";
+import ClimateMapPage from "./pages/ClimateMapPage";
 
 const queryClient = new QueryClient();
 
@@ -42,7 +42,7 @@ const App = () => (
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/social" element={<SocialPage />} />
               <Route path="/social/user/:userId" element={<UserFeedPage />} />
-              {/* <Route path="/map" element={<ClimateMapPage />} /> */}
+              <Route path="/map" element={<ClimateMapPage />} />
             </Route>
 
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

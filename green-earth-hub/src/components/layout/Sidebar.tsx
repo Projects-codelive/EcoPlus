@@ -1,26 +1,29 @@
-
-import { Home, Leaf, BookOpen, Trophy, User, MessageSquare } from 'lucide-react';
+import { Home, Leaf, BookOpen, Trophy, User, Map } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
+import { getUserLevel } from '@/utils/levelUtils';
+
+const MOCK_POINTS = 1890;
 
 const navItems = [
   { icon: Home, label: 'Home', path: '/dashboard' },
   { icon: Leaf, label: 'Track', path: '/track' },
+  { icon: Map, label: 'Map', path: '/map' },
   { icon: BookOpen, label: 'Learn', path: '/learn' },
   { icon: Trophy, label: 'Leaders', path: '/leaderboard' },
-  { icon: MessageSquare, label: 'Social Feed', path: '/social' },
-  { icon: User, label: 'Profile', path: '/profile' },
 ];
 
 export const Sidebar = () => {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  // userLevel is no longer used after removing the user info div
+  // const userLevel = getUserLevel(MOCK_POINTS);
 
   return (
     <aside
       className={cn(
-        "hidden md:flex flex-col h-screen sticky top-0 bg-card border-r border-border transition-all duration-300 z-30 shrink-0",
+        "hidden md:flex flex-col h-screen bg-card border-r border-border transition-all duration-300 relative z-50 shrink-0",
         collapsed ? "w-16" : "w-64"
       )}
     >
@@ -80,7 +83,7 @@ export const Sidebar = () => {
       </nav>
 
       {/* Optional User Info or Footer at bottom */}
-
+      {/* The user info div has been removed as per instruction */}
     </aside>
   );
 };
