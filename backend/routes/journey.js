@@ -28,10 +28,8 @@ router.post('/', verifyToken, async (req, res) => {
         // Optional: Add points logic here too (e.g. 10 points per km saved, or flat 50 per log)
         // For now, just updating co2Saved as requested.
         await User.findByIdAndUpdate(req.userId, {
-            $inc: {
-                co2Saved: saved
-                // points: 10 // Uncomment if we want points per journey
-            }
+            co2Saved: saved,
+            points: 10 // Award 10 points per journey log
         });
 
         res.status(201).json(newJourney);

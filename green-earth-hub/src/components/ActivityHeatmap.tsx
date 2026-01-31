@@ -1,101 +1,201 @@
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import React from 'react';
 import { cn } from '@/lib/utils';
-import { Info } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ActivityLogItem {
-    date: string; // YYYY-MM-DD
+    date: string;
     count: number;
 }
 
-interface ActivityHeatmapProps {
-    activityLog: ActivityLogItem[];
+interface HeatmapProps {
+    activityLog?: ActivityLogItem[];
 }
 
-const ActivityHeatmap = ({ activityLog = [] }: ActivityHeatmapProps) => {
-    // Generate last 365 days (or approx 1 year grid)
-    const today = new Date();
-    const days = [];
-    for (let i = 364; i >= 0; i--) {
-        const d = new Date(today);
-        d.setDate(d.getDate() - i);
-        const dateStr = d.toISOString().split('T')[0];
-        const activity = activityLog.find(log => log.date === dateStr);
-        days.push({
-            date: dateStr,
-            count: activity ? activity.count : 0,
-            level: activity ? Math.min(4, Math.ceil(activity.count / 2)) : 0 // 0-4 intensity
-        });
-    }
+const ActivityHeatmap: React.FC<HeatmapProps> = ({ activityLog = [] }) => {
+    // Generate last 6 months of dates
+    const generateDateGrid = () => {
+        const months = [];
+        const today = new Date();
 
-    const getIntensityClass = (level: number) => {
-        switch (level) {
-            case 0: return 'bg-gray-100 hover:bg-gray-200';
-            case 1: return 'bg-green-200 hover:bg-green-300';
-            case 2: return 'bg-green-400 hover:bg-green-500';
-            case 3: return 'bg-green-600 hover:bg-green-700';
-            case 4: return 'bg-green-800 hover:bg-green-900';
-            default: return 'bg-gray-100';
+        // Go back 6 months
+        for (let i = 5; i >= 0; i--) {
+            const monthDate = new Date(today.getFullYear(), today.getMonth() - i, 1);
+            months.push({
+                name: monthDate.toLocaleDateString('en-US', { month: 'short' }),
+                year: monthDate.getFullYear(),
+                monthIndex: monthDate.getMonth()
+            });
         }
+
+        return months;
     };
 
+    // Format date as YYYY-MM-DD in local time (matches backend streak day)
+    const toLocalDateString = (date: Date): string => {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    };
+
+    // Get activity level for a specific date (0 = none, 1 = low, 2 = medium, 3 = high)
+    const getActivityLevel = (date: Date): number => {
+        const dateStr = toLocalDateString(date);
+        const activity = activityLog.find(log => log.date === dateStr);
+        if (!activity) return 0;
+        const count = activity.count ?? 0;
+        if (count >= 5) return 3; // Adjusted for "count" vs points
+        if (count >= 2) return 2;
+        return 1;
+    };
+
+    // Generate weeks for a month
+    const getWeeksInMonth = (year: number, month: number) => {
+        const weeks: Date[][] = [];
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+
+        let currentWeek: Date[] = [];
+
+        // Fill in days from previous month if needed
+        const startDayOfWeek = firstDay.getDay();
+        for (let i = startDayOfWeek - 1; i >= 0; i--) {
+            const date = new Date(year, month, -i);
+            currentWeek.push(date);
+        }
+
+        // Add all days of the month
+        for (let day = 1; day <= lastDay.getDate(); day++) {
+            const date = new Date(year, month, day);
+            currentWeek.push(date);
+
+            if (date.getDay() === 6 || day === lastDay.getDate()) {
+                // End of week or end of month
+                weeks.push([...currentWeek]);
+                currentWeek = [];
+            }
+        }
+
+        return weeks;
+    };
+
+    const months = generateDateGrid();
+    // We use just the first letter for the side labels to save space or match compact design better
+    const weekdays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+
+    // Row height and gap must match between labels and grid
+    // Using rounded-full for circles as per previous design request
+    const cellSize = 'w-3 h-3';
+    const rowGap = 'gap-1';
+
     return (
-        <div className="lisboa-card">
-            <div className="flex items-center justify-between mb-4">
-                <h3 className="font-bold text-foreground">Activity Log</h3>
-                <TooltipProvider>
-                    <Tooltip>
-                        <TooltipTrigger>
-                            <Info size={16} className="text-muted-foreground" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>Your daily activity intensity</p>
-                        </TooltipContent>
-                    </Tooltip>
-                </TooltipProvider>
+        <div className="lisboa-card border border-border bg-card text-card-foreground shadow-sm p-6 rounded-3xl">
+            <div className="flex items-center justify-between mb-6">
+                <h3 className="font-bold text-xl text-foreground text-emerald-900 dark:text-emerald-100">Activity Heatmap</h3>
             </div>
 
-            {/* Scrollable container for mobile */}
             <div className="overflow-x-auto pb-2">
-                <div className="flex gap-1 min-w-max">
-                    {/* Simple Grid: 7 rows (days of week) -> 52 columns */}
-                    {/* Group days by weeks for easier column rendering */}
-                    {Array.from({ length: 53 }).map((_, weekIndex) => (
-                        <div key={weekIndex} className="flex flex-col gap-1">
-                            {Array.from({ length: 7 }).map((_, dayIndex) => {
-                                const dayData = days[weekIndex * 7 + dayIndex];
-                                if (!dayData) return null;
-                                return (
-                                    <TooltipProvider key={dayData.date}>
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <div
-                                                    className={cn(
-                                                        "w-3 h-3 rounded-[2px] transition-colors cursor-pointer",
-                                                        getIntensityClass(dayData.level)
-                                                    )}
-                                                />
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <p className="text-xs font-bold">{dayData.date}: {dayData.count} activities</p>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
-                                );
-                            })}
-                        </div>
-                    ))}
+                <div className="inline-flex gap-4 items-start">
+                    {/* Weekday labels */}
+                    <div className={`flex flex-col ${rowGap} text-[10px] font-medium text-muted-foreground pr-2 shrink-0 pt-6`}>
+                        {/* The month header is approx h-[1.25rem] + mb-2, so we pad top to align weeks? 
+                 Actually the month loop has separate headers. We just need to align rows.
+                 The months have a header. We should spacer.
+             */}
+                        {/* <div className="min-h-[1.25rem] mb-2" /> */}
+                        {['Mon', 'Wed', 'Fri'].map((day, i) => (
+                            // Visual hacking to match GitHub style skipping? 
+                            // The user's code had all days. Let's stick to user code but refined.
+                            // User's code labels: M, T, W, T, F, S, S? 
+                            // GitHub usually does Mon/Wed/Fri.
+                            // Let's print all 7 but small.
+                            null
+                        ))}
+                        {/* Let's strictly follow the user's provided structure for labels but styled */}
+                        {weekdays.map((day, i) => (
+                            // Only show alternate days to declutter if desired, or all. 
+                            // Let's show all for now as per user code logic.
+                            <div
+                                key={i}
+                                className="h-3 flex items-center justify-end leading-none text-right"
+                            >
+                                {/* {i % 2 !== 0 ? day : ''} */}
+                                {day}
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Month columns */}
+                    {months.map((month) => {
+                        const weeks = getWeeksInMonth(month.year, month.monthIndex);
+
+                        return (
+                            <div key={`${month.year}-${month.monthIndex}`} className="flex flex-col shrink-0">
+                                <div className="text-xs text-muted-foreground mb-2 text-center font-medium min-h-[1.25rem] flex items-center justify-center">
+                                    {month.name}
+                                </div>
+
+                                <div className={`flex ${rowGap}`}>
+                                    {weeks.map((week, weekIdx) => (
+                                        <div key={`${month.monthIndex}-${weekIdx}`} className={`flex flex-col ${rowGap}`}>
+                                            {[0, 1, 2, 3, 4, 5, 6].map(dayIdx => {
+                                                const date = week[dayIdx];
+                                                // Placeholder for alignment if the week array is partial?
+                                                // The logic provided fills weeks fully or partially.
+                                                // We need to handle undefined if logic is loose.
+                                                if (!date) {
+                                                    return <div key={dayIdx} className={`${cellSize} rounded-full bg-transparent`} />;
+                                                }
+
+                                                const isCurrentMonth = date.getMonth() === month.monthIndex;
+                                                const level = getActivityLevel(date);
+                                                const isToday = date.toDateString() === new Date().toDateString();
+
+                                                // Colors
+                                                let bgColor = 'bg-muted/40';
+                                                if (level >= 3) bgColor = 'bg-emerald-600';
+                                                else if (level === 2) bgColor = 'bg-emerald-400';
+                                                else if (level === 1) bgColor = 'bg-emerald-200';
+
+                                                // Dim days not in current month
+                                                if (!isCurrentMonth) bgColor = 'bg-muted/10 opacity-30';
+
+                                                return (
+                                                    <TooltipProvider key={dayIdx}>
+                                                        <Tooltip delayDuration={0}>
+                                                            <TooltipTrigger asChild>
+                                                                <div
+                                                                    className={cn(
+                                                                        cellSize,
+                                                                        "rounded-full transition-all duration-300 cursor-pointer",
+                                                                        bgColor,
+                                                                        isToday ? 'ring-2 ring-emerald-500 ring-offset-1' : 'hover:ring-2 hover:ring-emerald-200 hover:ring-offset-1'
+                                                                    )}
+                                                                />
+                                                            </TooltipTrigger>
+                                                            <TooltipContent>
+                                                                {date.toLocaleDateString()}
+                                                            </TooltipContent>
+                                                        </Tooltip>
+                                                    </TooltipProvider>
+                                                );
+                                            })}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
 
-            {/* Legend */}
-            <div className="flex items-center gap-2 mt-4 text-xs text-muted-foreground">
+            <div className="flex items-center gap-3 mt-4 text-xs font-medium text-muted-foreground pl-2">
                 <span>Less</span>
-                <div className="flex gap-1">
-                    <div className="w-3 h-3 rounded-[2px] bg-gray-100"></div>
-                    <div className="w-3 h-3 rounded-[2px] bg-green-200"></div>
-                    <div className="w-3 h-3 rounded-[2px] bg-green-400"></div>
-                    <div className="w-3 h-3 rounded-[2px] bg-green-600"></div>
-                    <div className="w-3 h-3 rounded-[2px] bg-green-800"></div>
+                <div className="flex gap-1 items-center">
+                    <div className="w-3 h-3 rounded-full bg-muted/40" />
+                    <div className="w-3 h-3 rounded-full bg-emerald-200" />
+                    <div className="w-3 h-3 rounded-full bg-emerald-400" />
+                    <div className="w-3 h-3 rounded-full bg-emerald-600" />
                 </div>
                 <span>More</span>
             </div>

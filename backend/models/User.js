@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema({
     badges: {
         type: [String],
         default: []
+    },
+    avatar: {
+        type: String,
+        default: '' // Can be a URL or an identifier like "level_1"
     }
 }, { timestamps: true });
 

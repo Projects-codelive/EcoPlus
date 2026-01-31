@@ -8,7 +8,7 @@ import { getUserLevel } from '@/utils/levelUtils';
 import { AvatarGallery } from '@/components/profile/AvatarGallery';
 
 const ProfilePage = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, refreshUser } = useAuth();
   const [stats, setStats] = useState({ totalEmissions: 0, totalSaved: 0 });
   const [activityData, setActivityData] = useState({
     activityLog: [],
@@ -21,10 +21,12 @@ const ProfilePage = () => {
   const safeUser = user || {
     fullName: 'Eco Warrior',
     points: 0,
-    mobileNo: ''
+    mobileNo: '',
+    avatar: undefined
   };
 
   const userLevel = getUserLevel(safeUser.points);
+  const displayAvatar = safeUser.avatar || userLevel.avatar;
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -114,12 +116,12 @@ const ProfilePage = () => {
             onClick={() => setIsGalleryOpen(true)}
           >
             <img
-              src={userLevel.avatar}
+              src={displayAvatar}
               alt={userLevel.name}
               className="w-full h-full object-cover rounded-full"
             />
             <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[1px]">
-              <span className="text-white text-xs font-bold uppercase tracking-wider">View All</span>
+              <span className="text-white text-xs font-bold uppercase tracking-wider">Change</span>
             </div>
             <div className="absolute bottom-1 right-1 bg-accent text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm border-2 border-white">
               Lvl {userLevel.level}
@@ -144,11 +146,22 @@ const ProfilePage = () => {
               <p className="text-xs text-muted-foreground">Day Streak</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-foreground">{stats.totalEmissions} kg</p>
-              <p className="text-xs text-muted-foreground">CO₂ Generated</p>
+              <p className="text-2xl font-bold text-foreground">{stats.totalSaved} kg</p>
+              <p className="text-xs text-muted-foreground">CO₂ Saved</p>
             </div>
           </div>
         </div>
+
+        <AvatarGallery
+          isOpen={isGalleryOpen}
+          onClose={() => setIsGalleryOpen(false)}
+          userPoints={safeUser.points}
+          currentAvatar={safeUser.avatar}
+          onAvatarUpdate={(newAvatar) => {
+            refreshUser(); // Refresh global user state to update UI immediately
+            // Ideally refreshUser fetches from backend where update just happened
+          }}
+        />
 
         {/* Activity Heatmap */}
         <ActivityHeatmap activityLog={activityData.activityLog} />

@@ -9,7 +9,7 @@ import journeyRoutes from './routes/journey.js';
 import userRoutes from './routes/users.js';
 import socialRoutes from './routes/social.js';
 import floodRouter from './routes/flood.js';
-// import activityRoutes from './routes/activity.js';
+import activityRoutes from './routes/activity.js';
 
 import http from 'http';
 import { Server } from 'socket.io';
@@ -113,7 +113,7 @@ app.use('/api/journey', journeyRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/social', socialRoutes);
 app.use("/api/flood", floodRouter);
-// app.use('/api/activity', activityRoutes);
+app.use('/api/activity', activityRoutes);
 
 app.get('/', (req, res) => {
   res.send('Green Earth Hub Backend Running');

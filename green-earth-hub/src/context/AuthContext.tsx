@@ -9,6 +9,7 @@ interface User {
     points: number;
     co2Saved: number;
     badges: string[];
+    avatar?: string;
 }
 
 interface AuthContextType {
