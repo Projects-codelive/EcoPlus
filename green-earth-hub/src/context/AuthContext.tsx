@@ -7,6 +7,8 @@ interface User {
     fullName: string;
     mobileNo: string;
     points: number;
+    co2Saved: number;
+    badges: string[];
 }
 
 interface AuthContextType {

@@ -5,6 +5,7 @@ import { PostCard } from '@/components/social/PostCard';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { socket } from '@/lib/socket';
+import { API_BASE } from '@/lib/api';
 
 export const UserFeedPage = () => {
     const { userId } = useParams();
@@ -15,7 +16,7 @@ export const UserFeedPage = () => {
 
     const fetchUserPosts = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/api/social/user/${userId}`, {
+            const response = await fetch(`${API_BASE}/api/social/user/${userId}`, {
                 credentials: 'include'
             });
             if (response.ok) {
@@ -72,7 +73,7 @@ export const UserFeedPage = () => {
 
     const handleLike = async (postId: string) => {
         try {
-            await fetch(`http://localhost:5000/api/social/${postId}/like`, {
+            await fetch(`${API_BASE}/api/social/${postId}/like`, {
                 method: 'POST',
                 credentials: 'include'
             });
@@ -83,7 +84,7 @@ export const UserFeedPage = () => {
 
     const handleComment = async (postId: string, text: string) => {
         try {
-            await fetch(`http://localhost:5000/api/social/${postId}/comment`, {
+            await fetch(`${API_BASE}/api/social/${postId}/comment`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text }),
@@ -96,7 +97,7 @@ export const UserFeedPage = () => {
 
     const handleReactToComment = async (postId: string, commentId: string, type: string) => {
         try {
-            await fetch(`http://localhost:5000/api/social/${postId}/comment/${commentId}/react`, {
+            await fetch(`${API_BASE}/api/social/${postId}/comment/${commentId}/react`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ type }),

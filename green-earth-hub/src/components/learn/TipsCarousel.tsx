@@ -44,7 +44,7 @@ export const TipsCarousel = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="overflow-x-auto scrollbar-hide -mx-4 px-4" ref={scrollRef}>
+    <div className="overflow-x-auto overflow-y-hidden scrollbar-hide -mx-4 px-4" ref={scrollRef}>
       <div className="flex gap-4 pb-4" style={{ width: 'max-content' }}>
         {tips.map((tip, index) => {
           const Icon = tip.icon;

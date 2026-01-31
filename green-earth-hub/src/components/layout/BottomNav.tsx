@@ -1,4 +1,4 @@
-import { Home, Leaf, BookOpen, Trophy, User, MessageSquare } from 'lucide-react';
+import { Home, Leaf, BookOpen, Trophy, User, MessageSquare, Map } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
@@ -6,6 +6,7 @@ const navItems = [
   { icon: Home, label: 'Home', path: '/dashboard' },
   { icon: Leaf, label: 'Track', path: '/track' },
   { icon: BookOpen, label: 'Learn', path: '/learn' },
+  { icon: Map, label: 'Map', path: '/map' },
   { icon: Trophy, label: 'Leaders', path: '/leaderboard' },
   { icon: MessageSquare, label: 'Social', path: '/social' },
   { icon: User, label: 'Profile', path: '/profile' },

@@ -16,28 +16,11 @@ const navItems = [
 export const Sidebar = () => {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
-  const [userName, setUserName] = useState('User');
-
-  // Simple effect to read user name if available (pseudo-auth state)
-  // In a real app, use AuthContext
-  if (typeof window !== 'undefined') {
-    const stored = localStorage.getItem('user_profile');
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        if (parsed.name && parsed.name !== userName) {
-          setUserName(parsed.name);
-        }
-      } catch (e) {
-        // ignore
-      }
-    }
-  }
 
   return (
     <aside
       className={cn(
-        "hidden md:flex flex-col h-screen sticky top-0 bg-card border-r border-border transition-all duration-300 z-30",
+        "hidden md:flex flex-col h-screen sticky top-0 bg-card border-r border-border transition-all duration-300 z-30 shrink-0",
         collapsed ? "w-16" : "w-64"
       )}
     >
@@ -97,19 +80,7 @@ export const Sidebar = () => {
       </nav>
 
       {/* Optional User Info or Footer at bottom */}
-      <div className="p-4 border-t border-border mt-auto">
-        <Link to="/profile" className={cn("flex items-center gap-3 hover:bg-accent/50 p-2 rounded-lg transition-colors", collapsed && "justify-center")}>
-          <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
-            <User size={16} className="text-primary" />
-          </div>
-          {!collapsed && (
-            <div className="flex flex-col overflow-hidden">
-              <span className="text-sm font-medium truncate">{userName}</span>
-              <span className="text-xs text-muted-foreground truncate">user@example.com</span>
-            </div>
-          )}
-        </Link>
-      </div>
+
     </aside>
   );
 };

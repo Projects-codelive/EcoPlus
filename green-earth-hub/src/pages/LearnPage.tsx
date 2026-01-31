@@ -86,7 +86,7 @@ const LearnPage = () => {
 
   return (
     <AppLayout>
-      <div className="p-4 space-y-6 pb-24">
+      <div className="p-4 space-y-6 pb-24 w-full max-w-full overflow-x-hidden">
         <div className="pt-2 pb-2">
           <h1 className="text-2xl font-bold text-foreground">Climate Lab</h1>
           <p className="text-muted-foreground">Explore, learn, and take action</p>

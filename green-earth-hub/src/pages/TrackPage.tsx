@@ -3,15 +3,18 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { CarbonGauge } from '@/components/tracker/CarbonGauge';
 import { JourneyForm } from '@/components/tracker/JourneyForm';
 import { WeeklyChart } from '@/components/tracker/WeeklyChart';
+import { API_BASE } from '@/lib/api';
+import { useAuth } from '@/context/AuthContext';
 
 const TrackPage = () => {
+  const { refreshUser } = useAuth();
   const [currentEmissions, setCurrentEmissions] = useState(0);
   const [liveEstimate, setLiveEstimate] = useState(0); // Real-time estimate from form
   const maxEmissions = 15; // Range 0-15kg as requested
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/journey/stats', {
+      const response = await fetch(`${API_BASE}/api/journey/stats`, {
         credentials: 'include'
       });
       if (response.ok) {
@@ -29,6 +32,7 @@ const TrackPage = () => {
 
   const handleJourneySaved = () => {
     fetchStats(); // Update total from backend
+    if (refreshUser) refreshUser(); // Refresh user context if available
     setLiveEstimate(0); // Reset live estimate
   };
 

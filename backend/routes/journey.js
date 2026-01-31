@@ -1,5 +1,6 @@
 import express from 'express';
 import Journey from '../models/Journey.js';
+import User from '../models/User.js';
 
 import { verifyToken } from '../middleware/authMiddleware.js';
 
@@ -18,6 +19,21 @@ router.post('/', verifyToken, async (req, res) => {
         });
 
         await newJourney.save();
+
+        // Update User Stats
+        // Calculate savings: Baseline (Car avg ~0.21 kg/km) - Actual
+        const baselineEmission = distance * 0.21;
+        const saved = Math.max(0, baselineEmission - emissions); // Don't subtract score if they drive a tank
+
+        // Optional: Add points logic here too (e.g. 10 points per km saved, or flat 50 per log)
+        // For now, just updating co2Saved as requested.
+        await User.findByIdAndUpdate(req.userId, {
+            $inc: {
+                co2Saved: saved
+                // points: 10 // Uncomment if we want points per journey
+            }
+        });
+
         res.status(201).json(newJourney);
     } catch (error) {
         console.error("Journey Log Error:", error);

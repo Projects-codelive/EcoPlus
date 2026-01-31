@@ -41,7 +41,7 @@ router.post('/register', async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
 
-        res.status(201).json({ message: 'User registered successfully', user: { id: newUser._id, fullName: newUser.fullName, mobileNo: newUser.mobileNo, points: newUser.points } });
+        res.status(201).json({ message: 'User registered successfully', user: { id: newUser._id, fullName: newUser.fullName, mobileNo: newUser.mobileNo, points: newUser.points, co2Saved: newUser.co2Saved, badges: newUser.badges } });
 
     } catch (error) {
         console.error("Register Error:", error);
@@ -77,7 +77,7 @@ router.post('/login', async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
-        res.json({ message: 'Login successful', user: { id: user._id, fullName: user.fullName, mobileNo: user.mobileNo, points: user.points } });
+        res.json({ message: 'Login successful', user: { id: user._id, fullName: user.fullName, mobileNo: user.mobileNo, points: user.points, co2Saved: user.co2Saved, badges: user.badges } });
 
     } catch (error) {
         console.error("Login Error:", error);
@@ -103,7 +103,9 @@ router.get('/me', async (req, res) => {
             id: user._id,
             fullName: user.fullName,
             mobileNo: user.mobileNo,
-            points: user.points
+            points: user.points,
+            co2Saved: user.co2Saved,
+            badges: user.badges
         });
     } catch (error) {
         console.error("Auth Check Error:", error);

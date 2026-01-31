@@ -20,6 +20,14 @@ const userSchema = new mongoose.Schema({
     points: {
         type: Number,
         default: 0
+    },
+    co2Saved: {
+        type: Number,
+        default: 0
+    },
+    badges: {
+        type: [String],
+        default: []
     }
 }, { timestamps: true });
 

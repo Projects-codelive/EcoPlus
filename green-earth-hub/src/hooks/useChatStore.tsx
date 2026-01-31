@@ -12,12 +12,7 @@ import { chatService } from '@/services/chatService';
 
 export const useChatStore = () => {
     const [state, setState] = useState<ChatState>({
-        messages: [{
-            id: 'init-1',
-            role: 'assistant',
-            content: 'Hi! I am your Eco-Assistant. Ask me anything about reducing your carbon footprint!',
-            timestamp: new Date()
-        }],
+        messages: [],
         isOpen: false,
         isLoading: false,
         unreadCount: 1
@@ -43,6 +38,13 @@ export const useChatStore = () => {
         setState(prev => ({
             ...prev,
             isOpen: false
+        }));
+    }, []);
+
+    const clearChat = useCallback(() => {
+        setState(prev => ({
+            ...prev,
+            messages: []
         }));
     }, []);
 
@@ -101,6 +103,7 @@ export const useChatStore = () => {
         toggleChat,
         openChat,
         closeChat,
+        clearChat,
         sendMessage
     };
 };

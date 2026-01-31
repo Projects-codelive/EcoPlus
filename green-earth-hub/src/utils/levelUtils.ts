@@ -1,39 +1,35 @@
-export const LEVEL_THRESHOLDS = [
-    { level: 1, name: "Seedling", minPoints: 0, avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Seedling" },
-    { level: 2, name: "Sprout", minPoints: 500, avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sprout" },
-    { level: 3, name: "Sapling", minPoints: 1000, avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sapling" },
-    { level: 4, name: "Tree", minPoints: 2000, avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Tree" },
-    { level: 5, name: "Forest", minPoints: 4000, avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Forest" },
+import level1 from '/Level_1.png';
+import level2 from '/Level_2.png';
+import level3 from '/Level__3.png';
+import level4 from '/Level_4.png';
+import level5 from '/Level_5.jpg';
+import level6 from '/Level_6.jpg';
+import level7 from '/Level_7.jpg';
+
+export interface LevelData {
+    level: number;
+    name: string;
+    minPoints: number;
+    maxPoints: number;
+    avatar: string;
+}
+
+export const LEVEL_THRESHOLDS: LevelData[] = [
+    { level: 1, name: 'Novice', minPoints: 0, maxPoints: 100, avatar: level1 },
+    { level: 2, name: 'Scout', minPoints: 101, maxPoints: 300, avatar: level2 },
+    { level: 3, name: 'Guardian', minPoints: 301, maxPoints: 600, avatar: level3 },
+    { level: 4, name: 'Champion', minPoints: 601, maxPoints: 1000, avatar: level4 },
+    { level: 5, name: 'Hero', minPoints: 1001, maxPoints: 1500, avatar: level5 },
+    { level: 6, name: 'Legend', minPoints: 1501, maxPoints: 2100, avatar: level6 },
+    { level: 7, name: 'Mythic', minPoints: 2101, maxPoints: Infinity, avatar: level7 },
 ];
 
-export const getUserLevel = (points: number) => {
-    // Find the highest level where points >= minPoints
-    // We can reverse the array to find the first match, or just loop
-    let currentLevel = LEVEL_THRESHOLDS[0];
+export const getUserLevel = (points: number): LevelData => {
+    const level = LEVEL_THRESHOLDS.find(l => points >= l.minPoints && points <= l.maxPoints);
+    return level || LEVEL_THRESHOLDS[0];
+};
 
-    for (let i = LEVEL_THRESHOLDS.length - 1; i >= 0; i--) {
-        if (points >= LEVEL_THRESHOLDS[i].minPoints) {
-            currentLevel = LEVEL_THRESHOLDS[i];
-            break;
-        }
-    }
-
-    // Calculate progress to next level
-    const nextLevelIndex = LEVEL_THRESHOLDS.findIndex(l => l.level === currentLevel.level + 1);
-    const nextLevel = nextLevelIndex !== -1 ? LEVEL_THRESHOLDS[nextLevelIndex] : null;
-
-    let progress = 0;
-    if (nextLevel) {
-        const range = nextLevel.minPoints - currentLevel.minPoints;
-        const gained = points - currentLevel.minPoints;
-        progress = Math.min(100, Math.max(0, (gained / range) * 100));
-    } else {
-        progress = 100; // Max level reached
-    }
-
-    return {
-        ...currentLevel,
-        progress,
-        nextLevelPoints: nextLevel ? nextLevel.minPoints : null
-    };
+export const getNextLevel = (currentLevel: number): LevelData | null => {
+    if (currentLevel >= LEVEL_THRESHOLDS.length) return null;
+    return LEVEL_THRESHOLDS.find(l => l.level === currentLevel + 1) || null;
 };
