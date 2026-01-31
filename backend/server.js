@@ -23,9 +23,15 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app); // Create HTTP server
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:8080',
+  process.env.FRONTEND_URL, // e.g. https://your-app.vercel.app
+].filter(Boolean);
+
 const io = new Server(server, { // Attach Socket.io
   cors: {
-    origin: ['http://localhost:5173', 'http://localhost:8080', 'https://ecoplus-dtfd.onrender.com'],
+    origin: '*', // For development/demo ease, allow all. change to allowedOrigins for security.
     credentials: true,
   }
 });
@@ -36,7 +42,7 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:8080'],
+  origin: allowedOrigins.length > 0 ? allowedOrigins : '*',
   credentials: true,
 }));
 
