@@ -14,6 +14,10 @@ const questionSchema = new mongoose.Schema({
     correctOptionIndex: {
         type: Number,
         required: true
+    },
+    subject: {
+        type: String,
+        default: 'General'
     }
 });
 

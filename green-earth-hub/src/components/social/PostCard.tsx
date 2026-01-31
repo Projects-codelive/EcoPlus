@@ -85,7 +85,7 @@ export const PostCard = ({ post, onLike, onComment, onReactToComment }: PostCard
                                 <CarouselItem key={idx}>
                                     <div className="relative aspect-square w-full overflow-hidden bg-muted">
                                         <img
-                                            src={`http://localhost:5000${img}`}
+                                            src={`http://localhost:5001${img}`}
                                             alt={`Post image ${idx + 1}`}
                                             className="object-cover w-full h-full"
                                         />

@@ -2,14 +2,19 @@ import { useState, useEffect } from 'react';
 import { PostCard } from './PostCard';
 import { socket } from '@/lib/socket';
 import { toast } from 'sonner';
+import { EventCard } from '@/components/events/EventCard';
+import { useAuth } from '@/context/AuthContext';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
-export const Feed = () => {
+export const Feed = ({ refreshTrigger }: { refreshTrigger?: number }) => {
+    const { user } = useAuth();
     const [posts, setPosts] = useState<any[]>([]);
+    const [events, setEvents] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     const fetchFeed = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/social/feed', {
+            const response = await fetch('http://localhost:5001/api/social/feed', {
                 credentials: 'include'
             });
             if (response.ok) {
@@ -23,8 +28,38 @@ export const Feed = () => {
         }
     };
 
+    const fetchEvents = async () => {
+        try {
+            const response = await fetch('http://localhost:5001/api/events');
+            if (response.ok) {
+                const data = await response.json();
+                setEvents(data);
+            }
+        } catch (error) {
+            console.error('Events error:', error);
+        }
+    };
+
+    const handleJoinEvent = async (eventId: string) => {
+        if (!user) {
+            toast.error("Please login to join events");
+            return;
+        }
+        try {
+            await fetch(`http://localhost:5001/api/events/${eventId}/join`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+            toast.success("Joined event successfully!");
+            fetchEvents();
+        } catch (error) {
+            toast.error("Failed to join event");
+        }
+    };
+
     useEffect(() => {
         fetchFeed();
+        fetchEvents();
 
         // Socket Event Listeners
         const handleNewPost = (newPost: any) => {
@@ -68,7 +103,7 @@ export const Feed = () => {
 
     const handleLike = async (postId: string) => {
         try {
-            await fetch(`http://localhost:5000/api/social/${postId}/like`, {
+            await fetch(`http://localhost:5001/api/social/${postId}/like`, {
                 method: 'POST',
                 credentials: 'include'
             });
@@ -79,7 +114,7 @@ export const Feed = () => {
 
     const handleComment = async (postId: string, text: string) => {
         try {
-            await fetch(`http://localhost:5000/api/social/${postId}/comment`, {
+            await fetch(`http://localhost:5001/api/social/${postId}/comment`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text }),
@@ -92,7 +127,7 @@ export const Feed = () => {
 
     const handleReactToComment = async (postId: string, commentId: string, type: string) => {
         try {
-            await fetch(`http://localhost:5000/api/social/${postId}/comment/${commentId}/react`, {
+            await fetch(`http://localhost:5001/api/social/${postId}/comment/${commentId}/react`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ type }),
@@ -107,25 +142,45 @@ export const Feed = () => {
         return <div className="text-center py-8 text-muted-foreground">Loading feed...</div>;
     }
 
-    if (posts.length === 0) {
-        return (
-            <div className="text-center py-10 bg-accent/10 rounded-xl">
-                <p className="text-muted-foreground">No posts yet. Be the first to share something!</p>
-            </div>
-        );
-    }
-
     return (
         <div className="space-y-6 pb-20">
-            {posts.map(post => (
-                <PostCard
-                    key={post._id}
-                    post={post}
-                    onLike={handleLike}
-                    onComment={handleComment}
-                    onReactToComment={handleReactToComment}
-                />
-            ))}
+            {/* Events Section */}
+            {events.length > 0 && (
+                <div className="space-y-2">
+                    <h2 className="text-xl font-bold px-1">Upcoming Events</h2>
+                    <Carousel className="w-full max-w-full">
+                        <CarouselContent className="-ml-2 md:-ml-4">
+                            {events.map((event) => (
+                                <CarouselItem key={event._id} className="pl-2 md:pl-4 basis-11/12 md:basis-1/2 lg:basis-1/2">
+                                    <EventCard
+                                        event={event}
+                                        currentUserId={user?.id}
+                                        onJoin={handleJoinEvent}
+                                    />
+                                </CarouselItem>
+                            ))}
+                        </CarouselContent>
+                    </Carousel>
+                </div>
+            )}
+
+            {/* Posts Section */}
+            <h2 className="text-xl font-bold px-1">Recent Posts</h2>
+            {posts.length === 0 ? (
+                <div className="text-center py-10 bg-accent/10 rounded-xl">
+                    <p className="text-muted-foreground">No posts yet. Be the first to share something!</p>
+                </div>
+            ) : (
+                posts.map(post => (
+                    <PostCard
+                        key={post._id}
+                        post={post}
+                        onLike={handleLike}
+                        onComment={handleComment}
+                        onReactToComment={handleReactToComment}
+                    />
+                ))
+            )}
         </div>
     );
 };

@@ -2,6 +2,7 @@
 import express from 'express';
 import Question from '../models/Question.js';
 import User from '../models/User.js';
+import { checkBadges } from '../utils/badgeUtils.js';
 
 const router = express.Router();
 
@@ -45,7 +46,7 @@ router.post('/verify', async (req, res) => {
 
         // Check if the user sent a valid number
         if (isNaN(userIndex)) {
-             return res.status(400).json({ message: 'Invalid index format provided' });
+            return res.status(400).json({ message: 'Invalid index format provided' });
         }
 
         const isCorrect = dbIndex === userIndex;
@@ -58,6 +59,7 @@ router.post('/verify', async (req, res) => {
         console.log(`Match Result: ${isCorrect}`);
         console.log(`--------------------------`);
 
+        let earnedBadges = [];
         let newPoints = 0;
         if (isCorrect && userId) {
             const user = await User.findByIdAndUpdate(
@@ -66,13 +68,28 @@ router.post('/verify', async (req, res) => {
                 { new: true }
             );
             newPoints = user ? user.points : 0;
+
+            // Check for badges
+            // We need to fetch the question to know the subject, which we already have in 'question' variable
+            earnedBadges = await checkBadges(userId, {
+                type: 'QUIZ',
+                subject: question.subject || 'General',
+                score: isCorrect ? 100 : 0, // Per individual question, it's 100 or 0
+                // For "Complete X Quizzes", we might need to count total verified answers or full quizzes
+                // Since this verify route works per-question, we treat each answer as progress.
+                // However, "Complete a quiz" usually means a set of questions.
+                // Given the current structure, we'll treat each correct answer as a partial step or simplified "quiz" event.
+                // For "Total Quizzes", we'd ideally track quiz sessions. 
+                // For now, let's pass a 'questionAnswered' context.
+            });
         }
 
         res.json({
             success: isCorrect,
             newTotalPoints: newPoints,
             correctOptionIndex: dbIndex, // Send back the correct index so frontend can show it
-            correctOptionText: question.options[dbIndex] // Optional: Send back the text too
+            correctOptionText: question.options[dbIndex],
+            newBadges: earnedBadges
         });
 
     } catch (error) {

@@ -10,6 +10,8 @@ import userRoutes from './routes/users.js';
 import socialRoutes from './routes/social.js';
 import floodRouter from './routes/flood.js';
 import activityRoutes from './routes/activity.js';
+import eventRoutes from './routes/events.js';
+import notificationRoutes from './routes/notifications.js';
 
 import http from 'http';
 import { Server } from 'socket.io';
@@ -114,6 +116,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/social', socialRoutes);
 app.use("/api/flood", floodRouter);
 app.use('/api/activity', activityRoutes);
+app.use('/api/events', eventRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 app.get('/', (req, res) => {
   res.send('Green Earth Hub Backend Running');

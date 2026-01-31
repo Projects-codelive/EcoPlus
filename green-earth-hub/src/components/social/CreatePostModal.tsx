@@ -60,7 +60,7 @@ export const CreatePostModal = ({ isOpen, onClose }: CreatePostModalProps) => {
         });
 
         try {
-            const response = await fetch('http://localhost:5000/api/social/create', {
+            const response = await fetch('http://localhost:5001/api/social/create', {
                 method: 'POST',
                 body: formData, // fetch automatically sets Content-Type to multipart/form-data
                 credentials: 'include'

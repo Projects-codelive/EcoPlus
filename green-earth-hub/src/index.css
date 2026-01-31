@@ -8,16 +8,20 @@
 @layer base {
   :root {
     /* Lisboa Theme Colors */
-    --background: 138 76% 97%; /* #F0FDF4 - Mint Cream */
-    --foreground: 162 89% 16%; /* #064E3B - Jungle Green */
+    --background: 138 76% 97%;
+    /* #F0FDF4 - Mint Cream */
+    --foreground: 162 89% 16%;
+    /* #064E3B - Jungle Green */
 
-    --card: 0 0% 100%; /* White */
+    --card: 0 0% 100%;
+    /* White */
     --card-foreground: 162 89% 16%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 162 89% 16%;
 
-    --primary: 162 89% 16%; /* Jungle Green */
+    --primary: 162 89% 16%;
+    /* Jungle Green */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 138 76% 97%;
@@ -26,10 +30,12 @@
     --muted: 138 50% 92%;
     --muted-foreground: 162 40% 35%;
 
-    --accent: 27 97% 61%; /* #FB923C - Coral Orange */
+    --accent: 27 97% 61%;
+    /* #FB923C - Coral Orange */
     --accent-foreground: 0 0% 100%;
 
-    --success: 82 78% 44%; /* #84CC16 - Lime Green */
+    --success: 82 78% 44%;
+    /* #84CC16 - Lime Green */
     --success-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
@@ -114,6 +120,7 @@
 }
 
 @layer components {
+
   /* Lisboa Card Styling */
   .lisboa-card {
     @apply bg-card rounded-3xl p-6;
@@ -197,9 +204,12 @@
   }
 
   @keyframes pulse-glow {
-    0%, 100% {
+
+    0%,
+    100% {
       box-shadow: 0 4px 12px hsl(27 97% 61% / 0.3);
     }
+
     50% {
       box-shadow: 0 4px 24px hsl(27 97% 61% / 0.6);
     }
@@ -284,6 +294,10 @@
     background-color: hsl(var(--jungle));
   }
 
+  .bg-progress {
+    background-color: hsl(var(--success));
+  }
+
   /* Hide scrollbar for horizontal scroll areas */
   .scrollbar-hide {
     -ms-overflow-style: none;
@@ -292,5 +306,9 @@
 
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }

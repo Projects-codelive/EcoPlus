@@ -64,13 +64,13 @@ export const JourneyForm = ({ onEmissionChange, onJourneySaved }: JourneyFormPro
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/journey', {
+      const response = await fetch('http://localhost:5001/api/journey', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           // Assuming the auth token is in an httpOnly cookie, so we need to include credentials
           // However, typical fetch doesn't include cookies by default for cross-origin.
-          // Since we are likely on localhost:5173 calling localhost:5000, we need 'credentials: include' if using cookies.
+          // Since we are likely on localhost:5173 calling localhost:5001, we need 'credentials: include' if using cookies.
         },
         // The backend uses cookies for auth, so we MUST include credentials
         credentials: 'include',

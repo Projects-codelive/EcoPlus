@@ -29,7 +29,7 @@ export const LeaderboardList = () => {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/users/leaderboard');
+        const response = await fetch('http://localhost:5001/api/users/leaderboard');
         if (response.ok) {
           const data = await response.json();
           setUsers(data);

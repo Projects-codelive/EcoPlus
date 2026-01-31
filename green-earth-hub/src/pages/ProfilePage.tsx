@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { Settings, LogOut, Bell, Shield, HelpCircle, ChevronRight, Flame, User as UserIcon } from 'lucide-react';
+import { Settings, LogOut, Bell, Shield, HelpCircle, ChevronRight, Flame, User as UserIcon, Trophy, Share2 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import ActivityHeatmap from '@/components/ActivityHeatmap';
 import { API_BASE } from '@/lib/api';
 import { getUserLevel } from '@/utils/levelUtils';
 import { AvatarGallery } from '@/components/profile/AvatarGallery';
+import { BadgeList } from '@/components/profile/BadgeList';
+import { toast } from 'sonner';
 
 const ProfilePage = () => {
   const { user, logout, refreshUser } = useAuth();
@@ -22,7 +24,8 @@ const ProfilePage = () => {
     fullName: 'Eco Warrior',
     points: 0,
     mobileNo: '',
-    avatar: undefined
+    avatar: undefined,
+    badges: []
   };
 
   const userLevel = getUserLevel(safeUser.points);
@@ -133,23 +136,39 @@ const ProfilePage = () => {
             <span>{safeUser.mobileNo}</span>
           </p>
 
-          <div className="flex justify-center gap-6 mt-4 pt-4 border-t border-border">
+          <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-border">
             <div className="text-center">
-              <p className="text-2xl font-bold text-foreground">{safeUser.points || 0}</p>
-              <p className="text-xs text-muted-foreground">Points</p>
+              <p className="text-xl md:text-2xl font-bold text-foreground">{safeUser.points || 0}</p>
+              <p className="text-[10px] md:text-xs text-muted-foreground">Points</p>
             </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-foreground flex items-center justify-center gap-1">
-                <Flame className="text-orange-500" size={24} />
+            <div className="text-center border-l border-r border-border/50 px-1">
+              <p className="text-xl md:text-2xl font-bold text-foreground flex items-center justify-center gap-1">
+                <Flame className="text-orange-500" size={20} />
                 {activityData.streak}
               </p>
-              <p className="text-xs text-muted-foreground">Day Streak</p>
+              <p className="text-[10px] md:text-xs text-muted-foreground">Day Streak</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-foreground">{stats.totalSaved} kg</p>
-              <p className="text-xs text-muted-foreground">CO₂ Saved</p>
+              <p className="text-xl md:text-2xl font-bold text-foreground">{stats.totalSaved} kg</p>
+              <p className="text-[10px] md:text-xs text-muted-foreground">CO₂ Saved</p>
             </div>
           </div>
+
+          <button
+            onClick={() => {
+              if (user?.id) {
+                const link = `${window.location.origin}/share/${user.id}`;
+                navigator.clipboard.writeText(link);
+                toast.success('Profile link copied!', {
+                  description: 'Share it with your friends to show off your stats.'
+                });
+              }
+            }}
+            className="mt-6 w-full py-2 bg-primary/5 text-primary rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-primary/10 transition-colors"
+          >
+            <Share2 size={18} />
+            Share Profile
+          </button>
         </div>
 
         <AvatarGallery
@@ -162,6 +181,17 @@ const ProfilePage = () => {
             // Ideally refreshUser fetches from backend where update just happened
           }}
         />
+        <div className="lisboa-card p-0 overflow-hidden">
+          <div className="p-4 border-b border-border">
+            <h2 className="font-bold flex items-center gap-2">
+              <Trophy className="text-yellow-500" size={20} />
+              Badges
+            </h2>
+          </div>
+          <BadgeList earnedBadges={safeUser.badges || []} />
+        </div>
+
+        {/* Activity Heatmap */}
 
         {/* Activity Heatmap */}
         <ActivityHeatmap activityLog={activityData.activityLog} />

@@ -45,11 +45,11 @@ const Header = () => {
 
 export const AppLayout = ({ children }: AppLayoutProps) => {
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="min-h-screen bg-background flex flex-col md:flex-row">
       <Sidebar />
       <main className={cn(
         "flex-1 transition-all duration-300 min-h-screen flex flex-col",
-        "pb-24 md:pb-8" // Adequate bottom padding for mobile nav and chat widget
+        "pb-32 md:pb-8" // Increased padding to prevent chat widget overlap with content on mobile
       )}>
         <Header />
         {children}

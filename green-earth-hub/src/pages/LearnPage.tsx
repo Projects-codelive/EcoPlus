@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { QuizCard } from '@/components/learn/QuizCard';
+import QuizCard from '@/components/learn/QuizCard';
 import { TipsCarousel } from '@/components/learn/TipsCarousel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BookOpen, Lightbulb, FileText, Video, Image, Play, ArrowLeft, ExternalLink, X, Clock, Share2 } from 'lucide-react';
@@ -86,7 +86,7 @@ const LearnPage = () => {
 
   return (
     <AppLayout>
-      <div className="p-4 space-y-6 pb-24 w-full max-w-full overflow-x-hidden">
+      <div className="p-4 space-y-6 pb-24 w-full md:max-w-6xl mx-auto overflow-x-hidden">
         <div className="pt-2 pb-2">
           <h1 className="text-2xl font-bold text-foreground">Climate Lab</h1>
           <p className="text-muted-foreground">Explore, learn, and take action</p>

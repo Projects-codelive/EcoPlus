@@ -9,7 +9,6 @@ const navItems = [
   { icon: Map, label: 'Map', path: '/map' },
   { icon: Trophy, label: 'Leaders', path: '/leaderboard' },
   { icon: MessageSquare, label: 'Social', path: '/social' },
-  { icon: User, label: 'Profile', path: '/profile' },
 ];
 
 export const BottomNav = () => {

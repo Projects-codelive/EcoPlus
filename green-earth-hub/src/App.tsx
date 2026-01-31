@@ -13,10 +13,12 @@ import UserFeedPage from "./pages/UserFeedPage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import LandingPage from "./pages/LandingPage";
+import SharedProfilePage from "./pages/SharedProfilePage";
 import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
 import ClimateMapPage from "./pages/ClimateMapPage";
+import EventsPage from "./pages/EventsPage";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +35,9 @@ const App = () => (
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
 
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/share/:userId" element={<SharedProfilePage />} />
+
             {/* Protected Routes */}
             <Route element={<ProtectedRoute />}>
               <Route path="/dashboard" element={<Index />} />
@@ -43,6 +48,7 @@ const App = () => (
               <Route path="/social" element={<SocialPage />} />
               <Route path="/social/user/:userId" element={<UserFeedPage />} />
               <Route path="/map" element={<ClimateMapPage />} />
+              <Route path="/events" element={<EventsPage />} />
             </Route>
 
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

@@ -4,6 +4,7 @@ import { Check, X, ChevronRight, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useAuth } from '@/context/AuthContext';
+import { API_BASE } from '@/lib/api';
 
 interface Question {
   id: string; // Changed from number to string for MongoDB _id
@@ -12,8 +13,8 @@ interface Question {
   // correct is no longer on client side
 }
 
-export const QuizCard = () => {
-  const { user, updateUserPoints } = useAuth();
+export default function QuizCard() {
+  const { user, updateUserPoints, refreshUser } = useAuth();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -31,7 +32,7 @@ export const QuizCard = () => {
   const fetchQuestions = async () => {
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:5000/api/quiz/random');
+      const res = await fetch(`${API_BASE}/api/quiz/random`);
       if (!res.ok) throw new Error('Failed to fetch quiz');
       const data = await res.json();
       setQuestions(data);
@@ -52,7 +53,7 @@ export const QuizCard = () => {
     const question = questions[currentQuestionIndex];
 
     try {
-      const res = await fetch('http://localhost:5000/api/quiz/verify', {
+      const res = await fetch(`${API_BASE}/api/quiz/verify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -80,6 +81,21 @@ export const QuizCard = () => {
         // Immediately update global user state
         if (data.newTotalPoints !== undefined) {
           updateUserPoints(data.newTotalPoints);
+        }
+
+        // Show badge notifications
+        if (data.newBadges && data.newBadges.length > 0) {
+          // Refresh user data to update badges in profile
+          refreshUser();
+
+          data.newBadges.forEach((badgeName: string) => {
+            setTimeout(() => {
+              toast.success(`🎖️ Badge Unlocked: ${badgeName}!`, {
+                description: 'Check your profile to see your new achievement!',
+                duration: 4000,
+              });
+            }, 500);
+          });
         }
       } else {
         toast.error('Incorrect', {
@@ -159,7 +175,7 @@ export const QuizCard = () => {
       </div>
 
       {/* Question */}
-      <h3 className="text-lg font-bold text-foreground">
+      <h3 className="text-lg font-bold text-foreground break-words w-full">
         {question.question}
       </h3>
 

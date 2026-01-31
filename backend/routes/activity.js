@@ -3,6 +3,8 @@ import ActivityLog from '../models/ActivityLog.js';
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 
+import { checkBadges } from '../utils/badgeUtils.js';
+
 const router = express.Router();
 
 // Middleware to verify token
@@ -80,7 +82,10 @@ router.post('/log', verifyToken, async (req, res) => {
             }
         }
 
-        res.json({ message: 'Activity logged', streak });
+        // Check for badges
+        const newBadges = await checkBadges(userId, { type: 'ACTIVITY' });
+
+        res.json({ message: 'Activity logged', streak, newBadges });
 
     } catch (error) {
         console.error('Activity Log Error:', error);

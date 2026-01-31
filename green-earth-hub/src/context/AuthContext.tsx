@@ -29,7 +29,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const checkAuth = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/auth/me', {
+            const response = await fetch('http://localhost:5001/api/auth/me', {
                 credentials: 'include',
             });
 
@@ -57,7 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const logout = async () => {
         try {
-            await fetch('http://localhost:5000/api/auth/logout', { method: 'POST', credentials: 'include' });
+            await fetch('http://localhost:5001/api/auth/logout', { method: 'POST', credentials: 'include' });
             setUser(null);
             toast.success("Logged out successfully");
         } catch (error) {

@@ -1,4 +1,4 @@
-import { Home, Leaf, BookOpen, Trophy, User, Map } from 'lucide-react';
+import { Home, Leaf, BookOpen, Trophy, User, Map, MessageSquare } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -9,6 +9,7 @@ const MOCK_POINTS = 1890;
 const navItems = [
   { icon: Home, label: 'Home', path: '/dashboard' },
   { icon: Leaf, label: 'Track', path: '/track' },
+  { icon: MessageSquare, label: 'Feed', path: '/social' },
   { icon: Map, label: 'Map', path: '/map' },
   { icon: BookOpen, label: 'Learn', path: '/learn' },
   { icon: Trophy, label: 'Leaders', path: '/leaderboard' },
@@ -23,7 +24,7 @@ export const Sidebar = () => {
   return (
     <aside
       className={cn(
-        "hidden md:flex flex-col h-screen bg-card border-r border-border transition-all duration-300 relative z-50 shrink-0",
+        "hidden md:flex flex-col h-screen sticky top-0 bg-card border-r border-border transition-all duration-300 z-50 shrink-0",
         collapsed ? "w-16" : "w-64"
       )}
     >
