@@ -25,7 +25,7 @@ const app = express();
 const server = http.createServer(app); // Create HTTP server
 const io = new Server(server, { // Attach Socket.io
   cors: {
-    origin: ['http://localhost:5173', 'http://localhost:8080'],
+    origin: ['http://localhost:5173', 'http://localhost:8080', 'https://ecoplus-dtfd.onrender.com'],
     credentials: true,
   }
 });
