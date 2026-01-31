@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { EventCard } from '@/components/events/EventCard';
 import { useAuth } from '@/context/AuthContext';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { API_BASE } from '@/lib/api';
 
 export const Feed = ({ refreshTrigger }: { refreshTrigger?: number }) => {
     const { user } = useAuth();
@@ -14,7 +15,7 @@ export const Feed = ({ refreshTrigger }: { refreshTrigger?: number }) => {
 
     const fetchFeed = async () => {
         try {
-            const response = await fetch('http://localhost:5001/api/social/feed', {
+            const response = await fetch(`${API_BASE}/api/social/feed`, {
                 credentials: 'include'
             });
             if (response.ok) {
@@ -30,7 +31,7 @@ export const Feed = ({ refreshTrigger }: { refreshTrigger?: number }) => {
 
     const fetchEvents = async () => {
         try {
-            const response = await fetch('http://localhost:5001/api/events');
+            const response = await fetch(`${API_BASE}/api/events`);
             if (response.ok) {
                 const data = await response.json();
                 setEvents(data);
@@ -46,7 +47,7 @@ export const Feed = ({ refreshTrigger }: { refreshTrigger?: number }) => {
             return;
         }
         try {
-            await fetch(`http://localhost:5001/api/events/${eventId}/join`, {
+            await fetch(`${API_BASE}/api/events/${eventId}/join`, {
                 method: 'POST',
                 credentials: 'include'
             });
@@ -103,7 +104,7 @@ export const Feed = ({ refreshTrigger }: { refreshTrigger?: number }) => {
 
     const handleLike = async (postId: string) => {
         try {
-            await fetch(`http://localhost:5001/api/social/${postId}/like`, {
+            await fetch(`${API_BASE}/api/social/${postId}/like`, {
                 method: 'POST',
                 credentials: 'include'
             });
@@ -114,7 +115,7 @@ export const Feed = ({ refreshTrigger }: { refreshTrigger?: number }) => {
 
     const handleComment = async (postId: string, text: string) => {
         try {
-            await fetch(`http://localhost:5001/api/social/${postId}/comment`, {
+            await fetch(`${API_BASE}/api/social/${postId}/comment`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text }),
@@ -127,7 +128,7 @@ export const Feed = ({ refreshTrigger }: { refreshTrigger?: number }) => {
 
     const handleReactToComment = async (postId: string, commentId: string, type: string) => {
         try {
-            await fetch(`http://localhost:5001/api/social/${postId}/comment/${commentId}/react`, {
+            await fetch(`${API_BASE}/api/social/${postId}/comment/${commentId}/react`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ type }),

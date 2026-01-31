@@ -5,6 +5,7 @@ import { Calendar, Clock, MapPin, Users } from "lucide-react";
 import { format } from "date-fns";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { API_BASE } from "@/lib/api";
 
 export interface Event {
     _id: string;
@@ -109,7 +110,7 @@ export function EventCard({ event, currentUserId, onJoin, isJoining }: EventCard
                                 <div key={volunteer._id} className="flex items-center gap-3 p-2 rounded-lg border">
                                     <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
                                         {volunteer.avatar ? (
-                                            <img src={`http://localhost:5001${volunteer.avatar}`} alt={volunteer.fullName} className="h-full w-full rounded-full object-cover" />
+                                            <img src={`${API_BASE}${volunteer.avatar}`} alt={volunteer.fullName} className="h-full w-full rounded-full object-cover" />
                                         ) : (
                                             volunteer.fullName.charAt(0)
                                         )}

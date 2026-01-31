@@ -3,6 +3,7 @@ import { Calculator, Plus } from 'lucide-react';
 import { TransportSelector, TransportType } from './TransportSelector';
 import { LisboaSlider } from './LisboaSlider';
 import { toast } from 'sonner';
+import { API_BASE } from '@/lib/api';
 
 // CO2 emissions in kg per km
 const emissionFactors: Record<TransportType, number> = {
@@ -64,7 +65,7 @@ export const JourneyForm = ({ onEmissionChange, onJourneySaved }: JourneyFormPro
     }
 
     try {
-      const response = await fetch('http://localhost:5001/api/journey', {
+      const response = await fetch(`${API_BASE}/api/journey`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

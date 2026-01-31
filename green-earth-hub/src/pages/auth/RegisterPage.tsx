@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { useAuth } from '@/context/AuthContext';
+import { API_BASE } from '@/lib/api';
 
 const RegisterPage = () => {
     const navigate = useNavigate();
@@ -30,7 +31,7 @@ const RegisterPage = () => {
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:5001/api/auth/register', {
+            const response = await fetch(`${API_BASE}/api/auth/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

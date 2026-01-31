@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/AuthContext';
+import { API_BASE } from '@/lib/api';
 
 interface User {
   id: string;
@@ -29,7 +30,7 @@ export const LeaderboardList = () => {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const response = await fetch('http://localhost:5001/api/users/leaderboard');
+        const response = await fetch(`${API_BASE}/api/users/leaderboard`);
         if (response.ok) {
           const data = await response.json();
           setUsers(data);

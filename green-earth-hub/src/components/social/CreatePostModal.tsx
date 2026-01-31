@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Image, X, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { API_BASE } from '@/lib/api';
 
 interface CreatePostModalProps {
     isOpen: boolean;
@@ -60,7 +61,7 @@ export const CreatePostModal = ({ isOpen, onClose }: CreatePostModalProps) => {
         });
 
         try {
-            const response = await fetch('http://localhost:5001/api/social/create', {
+            const response = await fetch(`${API_BASE}/api/social/create`, {
                 method: 'POST',
                 body: formData, // fetch automatically sets Content-Type to multipart/form-data
                 credentials: 'include'
