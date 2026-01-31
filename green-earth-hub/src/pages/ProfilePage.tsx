@@ -10,7 +10,7 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/journey/stats', {
+        const response = await fetch(`http://localhost:5000/api/journey/stats?_t=${Date.now()}`, {
           credentials: 'include'
         });
         if (response.ok) {
@@ -42,8 +42,8 @@ const ProfilePage = () => {
               <p className="text-xs text-muted-foreground">Points</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-foreground">{stats.totalSaved} kg</p>
-              <p className="text-xs text-muted-foreground">CO₂ Saved</p>
+              <p className="text-2xl font-bold text-foreground">{stats.totalEmissions} kg</p>
+              <p className="text-xs text-muted-foreground">CO₂ Generated</p>
             </div>
             <div className="text-center">
               <p className="text-2xl font-bold text-foreground">0</p>

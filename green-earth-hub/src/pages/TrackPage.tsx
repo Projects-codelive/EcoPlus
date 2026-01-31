@@ -32,8 +32,8 @@ const TrackPage = () => {
     setLiveEstimate(0); // Reset live estimate
   };
 
-  // The gauge shows: History + Current Plan
-  const displayedEmissions = Math.round((currentEmissions + liveEstimate) * 100) / 100;
+  // The gauge shows: Just the current estimated journey (starts at 0)
+  const displayedEmissions = liveEstimate;
 
   return (
     <AppLayout>

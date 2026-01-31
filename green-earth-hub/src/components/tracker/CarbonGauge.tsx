@@ -44,8 +44,8 @@ export const CarbonGauge = ({ value, maxValue }: CarbonGaugeProps) => {
 
   return (
     <div className="lisboa-card">
-      <h2 className="text-lg font-bold text-foreground mb-2">Your Carbon Footprint</h2>
-      <p className="text-sm text-muted-foreground mb-4">This month's emissions</p>
+      <h2 className="text-lg font-bold text-foreground mb-2">Trip Impact</h2>
+      <p className="text-sm text-muted-foreground mb-4">Estimated emissions</p>
 
       <div className="relative flex justify-center">
         <svg width="300" height="160" viewBox="0 0 300 160">
@@ -59,14 +59,17 @@ export const CarbonGauge = ({ value, maxValue }: CarbonGaugeProps) => {
           />
 
           {/* Progress Arc */}
+          {/* Progress Arc */}
           <path
-            d={describeArc(cx, cy, radius, startAngle, progressAngle)}
+            d={describeArc(cx, cy, radius, startAngle, endAngle)}
             fill="none"
             stroke={getColor}
             strokeWidth={strokeWidth}
             strokeLinecap="round"
+            strokeDasharray={Math.PI * radius}
+            strokeDashoffset={(Math.PI * radius) * (1 - percentage / 100)}
             style={{
-              transition: 'stroke-dashoffset 0.5s ease, stroke 0.3s ease',
+              transition: 'stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.5s ease',
             }}
           />
 

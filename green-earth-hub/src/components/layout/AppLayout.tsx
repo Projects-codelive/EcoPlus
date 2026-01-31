@@ -3,6 +3,8 @@ import { BottomNav } from './BottomNav';
 import { useAuth } from '@/context/AuthContext';
 import { Trophy } from 'lucide-react';
 import { Sidebar } from './Sidebar';
+import { cn } from '@/lib/utils';
+import { ChatWidget } from '@/components/chat/ChatWidget';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -25,8 +27,12 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
   return (
     <div className="min-h-screen bg-background flex">
       <Sidebar />
-      <main className="flex-1 pb-24 md:pb-0 overflow-y-auto h-screen">
+      <main className={cn(
+        "flex-1 transition-all duration-300 min-h-screen",
+        "pb-24 md:pb-8" // Adequate bottom padding for mobile nav and chat widget
+      )}>
         {children}
+        <ChatWidget />
       </main>
       <BottomNav />
     </div>

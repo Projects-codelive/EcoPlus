@@ -15,8 +15,8 @@ export const BottomNav = () => {
   const location = useLocation();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border px-4 pb-safe z-50 md:hidden">
-      <div className="flex items-center justify-around py-2">
+    <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border px-2 pb-safe z-[100] md:hidden shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+      <div className="flex items-center justify-between py-2 overflow-x-auto no-scrollbar">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
           const Icon = item.icon;
@@ -26,22 +26,24 @@ export const BottomNav = () => {
               key={item.path}
               to={item.path}
               className={cn(
-                "flex flex-col items-center gap-1 px-3 py-2 rounded-2xl transition-all duration-200",
+                "flex flex-col items-center gap-1 min-w-[3.5rem] p-1.5 rounded-xl transition-all duration-200",
                 isActive
-                  ? "bg-accent text-accent-foreground"
+                  ? "text-primary"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
               <Icon
-                size={24}
-                strokeWidth={2.5}
-                className="transition-transform duration-200"
-                style={{
-                  strokeLinecap: 'round',
-                  strokeLinejoin: 'round'
-                }}
+                size={22}
+                strokeWidth={isActive ? 2.5 : 2}
+                className={cn(
+                  "transition-transform duration-200",
+                  isActive && "scale-110"
+                )}
               />
-              <span className="text-xs font-semibold">{item.label}</span>
+              <span className={cn(
+                "text-[10px] font-medium leading-tight",
+                isActive ? "font-semibold" : ""
+              )}>{item.label}</span>
             </Link>
           );
         })}
