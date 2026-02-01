@@ -29,7 +29,8 @@ const server = http.createServer(app); // Create HTTP server
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   'http://localhost:5173',
-  'http://localhost:8080', // e.g. https://your-app.vercel.app
+  'https://eco-plus-xi.vercel.app/'
+  // e.g. https://your-app.vercel.app
 ].filter(Boolean);
 
 const io = new Server(server, { // Attach Socket.io
