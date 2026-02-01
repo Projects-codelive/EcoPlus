@@ -52,8 +52,8 @@ const SocialPage = () => {
             {/* Main Container with max-width and centered */}
             <div className="min-h-screen bg-background">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                    {/* Header - Sticky on scroll */}
-                    <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+                    {/* Header - Sticky on desktop only (removed sticky on mobile to prevent overlap issues) */}
+                    <div className="relative sm:sticky sm:top-20 z-30 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
                         <div className="py-4 sm:py-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                             <div className="flex-1">
                                 <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
@@ -68,7 +68,10 @@ const SocialPage = () => {
                             <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
                                 <Button
                                     variant="outline"
-                                    onClick={() => setIsEventModalOpen(true)}
+                                    onClick={() => {
+                                        console.log('Create Event clicked');
+                                        setIsEventModalOpen(true);
+                                    }}
                                     size="default"
                                     className="flex-1 sm:flex-none gap-2"
                                 >
@@ -77,9 +80,12 @@ const SocialPage = () => {
                                     <span className="inline sm:hidden">Event</span>
                                 </Button>
                                 <Button
-                                    onClick={() => setIsCreateModalOpen(true)}
+                                    onClick={() => {
+                                        console.log('Create Post clicked');
+                                        setIsCreateModalOpen(true);
+                                    }}
                                     size="default"
-                                    className="flex-1 sm:flex-none bg-primary hover:bg-primary/90 text-primary-foreground gap-2"
+                                    className="flex-1 sm:flex-none bg-primary hover:bg-primary/90 text-primary-foreground gap-2 relative z-50 pointer-events-auto"
                                 >
                                     <Plus size={18} />
                                     <span className="hidden sm:inline">Create Post</span>

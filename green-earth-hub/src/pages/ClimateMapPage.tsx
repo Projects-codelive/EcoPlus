@@ -92,37 +92,33 @@ const ClimateMapPage = () => {
     }, [mode]);
 
     // ================= SEA ANIMATION =================
+    // ================= SEA ANIMATION =================
     useEffect(() => {
         if (mode !== "sea") return;
 
-        if (seaLevel < targetSeaLevel) {
-            const interval = setInterval(() => {
-                setSeaLevel(prev => {
-                    if (prev >= targetSeaLevel) {
-                        clearInterval(interval);
-                        return targetSeaLevel;
-                    }
-                    return +(prev + 0.1).toFixed(1);
-                });
-            }, 60);
+        // If we reached target, no need to run interval
+        // We use a small epsilon or check if the difference is significant
+        // But since we don't have seaLevel in deps, we can't check 'seaLevel === targetSeaLevel' directly to start/stop
+        // efficiently without re-triggering. 
+        // actually, we can just run the interval and check inside.
+        // Or better: keep it simple. The previous issue was re-creating interval every 60ms.
 
-            return () => clearInterval(interval);
-        }
+        const interval = setInterval(() => {
+            setSeaLevel(prev => {
+                const diff = targetSeaLevel - prev;
 
-        if (seaLevel > targetSeaLevel) {
-            const interval = setInterval(() => {
-                setSeaLevel(prev => {
-                    if (prev <= targetSeaLevel) {
-                        clearInterval(interval);
-                        return targetSeaLevel;
-                    }
-                    return +(prev - 0.1).toFixed(1);
-                });
-            }, 60);
+                // Snap to target if very close
+                if (Math.abs(diff) < 0.15) {
+                    return targetSeaLevel;
+                }
 
-            return () => clearInterval(interval);
-        }
-    }, [targetSeaLevel, mode, seaLevel]);
+                // Move towards target
+                return +(prev + (diff > 0 ? 0.1 : -0.1)).toFixed(1);
+            });
+        }, 60);
+
+        return () => clearInterval(interval);
+    }, [targetSeaLevel, mode]); // Removed seaLevel from dependencies!
 
     // ================= FETCH FLOOD DATA =================
     useEffect(() => {

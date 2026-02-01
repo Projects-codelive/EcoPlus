@@ -48,11 +48,11 @@ export const ChatWidget = () => {
     ];
 
     return (
-        <div className="fixed bottom-[5.5rem] right-4 md:bottom-8 z-[60] flex flex-col items-end font-sans">
+        <div className="fixed bottom-[5.5rem] right-4 md:bottom-8 z-[60] flex flex-col items-end font-sans pointer-events-none">
             {/* Chat Window */}
             <div
                 className={cn(
-                    "bg-[#f0fdf4] border border-emerald-100 shadow-2xl rounded-2xl w-[calc(100vw-2rem)] md:w-[350px] mb-4 overflow-hidden transition-all duration-300 origin-bottom-right flex flex-col",
+                    "bg-[#f0fdf4] border border-emerald-100 shadow-2xl rounded-2xl w-[calc(100vw-2rem)] md:w-[350px] mb-4 overflow-hidden transition-all duration-300 origin-bottom-right flex flex-col pointer-events-auto",
                     isOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 translate-y-4 pointer-events-none h-0"
                 )}
                 style={{ maxHeight: '500px', height: '500px' }}
@@ -212,7 +212,7 @@ export const ChatWidget = () => {
                 onClick={toggleChat}
                 size="lg"
                 className={cn(
-                    "rounded-full h-14 w-14 shadow-lg transition-transform duration-200 hover:scale-105 z-[60]",
+                    "rounded-full h-14 w-14 shadow-lg transition-transform duration-200 hover:scale-105 z-[60] pointer-events-auto",
                     isOpen ? "bg-white text-gray-600 hover:bg-gray-50 border border-emerald-100" : "bg-[#1e453e] text-white hover:bg-[#16332e]"
                 )}
             >
