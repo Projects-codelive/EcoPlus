@@ -53,33 +53,19 @@ export const HeroCard = () => {
           </p>
         </div>
 
-        {/* Glowing Game Button */}
+        {/* Eco Game Button */}
         <div className="mt-6 flex justify-center">
           <button
             onClick={() => setShowGame(true)}
-            className="group relative px-8 py-4 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 text-white font-bold text-lg rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
-            style={{
-              boxShadow: '0 0 20px rgba(168, 85, 247, 0.4), 0 0 40px rgba(236, 72, 153, 0.3)'
-            }}
+            className="group relative px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white font-semibold rounded-xl shadow transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-95 flex items-center gap-2"
           >
-            {/* Animated glow effect */}
-            <div
-              className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-300"
-              style={{ animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}
-            />
+            <Gamepad2 size={20} className="text-white/90" />
+            <span className="tracking-wide">Play Eco Game</span>
+            <Sparkles size={16} className="text-white/70 group-hover:text-white transition-colors" />
 
-            {/* Shimmer effect */}
-            <div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"
-            />
-
-            {/* Button content */}
-            <div className="relative flex items-center gap-3 justify-center">
-              <Sparkles size={20} className="animate-pulse" />
-              <Gamepad2 size={24} className="animate-bounce" />
-              <span className="tracking-wide">Play Eco Game</span>
-              <Gamepad2 size={24} className="animate-bounce" style={{ animationDelay: '0.2s' }} />
-              <Sparkles size={20} className="animate-pulse" style={{ animationDelay: '0.3s' }} />
+            {/* Subtle sheen effect on hover */}
+            <div className="absolute inset-0 rounded-xl overflow-hidden pointer-events-none">
+              <div className="absolute top-0 left-0 w-full h-full bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
           </button>
         </div>
