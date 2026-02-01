@@ -89,6 +89,11 @@ export const PostCard = ({ post, onLike, onComment, onReactToComment }: PostCard
                                             src={`${API_BASE}${img}`}
                                             alt={`Post image ${idx + 1}`}
                                             className="object-cover w-full h-full"
+                                            onError={(e) => {
+                                                console.error("Image load failed:", e.currentTarget.src);
+                                                e.currentTarget.style.display = 'none'; // Hide broken image
+                                            }}
+                                            onLoad={() => console.log("Image loaded:", `${API_BASE}${img}`)}
                                         />
                                     </div>
                                 </CarouselItem>
