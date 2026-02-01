@@ -20,7 +20,10 @@ export const Feed = ({ refreshTrigger }: { refreshTrigger?: number }) => {
             });
             if (response.ok) {
                 const data = await response.json();
+                console.log(`Feed: Received ${data.length} posts from backend`);
                 setPosts(data);
+            } else {
+                console.error('Feed fetch failed:', response.status, response.statusText);
             }
         } catch (error) {
             console.error('Feed error:', error);

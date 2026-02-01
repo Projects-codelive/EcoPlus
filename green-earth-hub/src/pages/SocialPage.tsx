@@ -49,55 +49,68 @@ const SocialPage = () => {
 
     return (
         <AppLayout>
-            <div className="p-4 space-y-4 max-w-2xl mx-auto">
-                {/* Header */}
-                <div className="pt-2 pb-2 flex justify-between items-center">
-                    <div>
-                        <h1 className="text-2xl font-bold text-foreground">Social Feed</h1>
-                        <p className="text-muted-foreground">Share your eco-journey</p>
+            {/* Main Container with max-width and centered */}
+            <div className="min-h-screen bg-background">
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                    {/* Header - Sticky on scroll */}
+                    <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+                        <div className="py-4 sm:py-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <div className="flex-1">
+                                <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
+                                    Social Feed
+                                </h1>
+                                <p className="text-sm sm:text-base text-muted-foreground mt-1">
+                                    Share your eco-journey with the community
+                                </p>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
+                                <Button
+                                    variant="outline"
+                                    onClick={() => setIsEventModalOpen(true)}
+                                    size="default"
+                                    className="flex-1 sm:flex-none gap-2"
+                                >
+                                    <CalendarPlus size={18} />
+                                    <span className="hidden sm:inline">Create Event</span>
+                                    <span className="inline sm:hidden">Event</span>
+                                </Button>
+                                <Button
+                                    onClick={() => setIsCreateModalOpen(true)}
+                                    size="default"
+                                    className="flex-1 sm:flex-none bg-primary hover:bg-primary/90 text-primary-foreground gap-2"
+                                >
+                                    <Plus size={18} />
+                                    <span className="hidden sm:inline">Create Post</span>
+                                    <span className="inline sm:hidden">Post</span>
+                                </Button>
+                            </div>
+                        </div>
                     </div>
-                    <div className="flex gap-2 shrink-0">
-                        <Button
-                            variant="outline"
-                            onClick={() => setIsEventModalOpen(true)}
-                            size="sm"
-                            className="rounded-full gap-2 text-xs md:text-sm px-3"
-                        >
-                            <CalendarPlus size={16} />
-                            <span className="hidden sm:inline">New Event</span>
-                            <span className="inline sm:hidden">Event</span>
-                        </Button>
-                        <Button
-                            onClick={() => setIsCreateModalOpen(true)}
-                            size="sm"
-                            className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground gap-2 text-xs md:text-sm px-3"
-                        >
-                            <Plus size={16} />
-                            <span className="hidden sm:inline">New Post</span>
-                            <span className="inline sm:hidden">Post</span>
-                        </Button>
+
+                    {/* Feed Content */}
+                    <div className="py-6 sm:py-8">
+                        <Feed refreshTrigger={refreshTrigger} />
                     </div>
                 </div>
-
-                {/* Feed */}
-                <Feed refreshTrigger={refreshTrigger} />
-
-                {/* Create Post Modal */}
-                <CreatePostModal
-                    isOpen={isCreateModalOpen}
-                    onClose={() => setIsCreateModalOpen(false)}
-                />
-
-                {/* Create Event Modal */}
-                <Dialog open={isEventModalOpen} onOpenChange={setIsEventModalOpen}>
-                    <DialogContent className="sm:max-w-[500px]">
-                        <DialogHeader>
-                            <DialogTitle>Create New Event</DialogTitle>
-                        </DialogHeader>
-                        <EventForm onSubmit={handleCreateEvent} isLoading={isEventLoading} />
-                    </DialogContent>
-                </Dialog>
             </div>
+
+            {/* Create Post Modal */}
+            <CreatePostModal
+                isOpen={isCreateModalOpen}
+                onClose={() => setIsCreateModalOpen(false)}
+            />
+
+            {/* Create Event Modal */}
+            <Dialog open={isEventModalOpen} onOpenChange={setIsEventModalOpen}>
+                <DialogContent className="sm:max-w-[500px]">
+                    <DialogHeader>
+                        <DialogTitle>Create New Event</DialogTitle>
+                    </DialogHeader>
+                    <EventForm onSubmit={handleCreateEvent} isLoading={isEventLoading} />
+                </DialogContent>
+            </Dialog>
         </AppLayout>
     );
 };

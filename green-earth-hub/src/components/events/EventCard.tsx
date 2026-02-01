@@ -34,9 +34,13 @@ interface EventCardProps {
 }
 
 export function EventCard({ event, currentUserId, onJoin, isJoining }: EventCardProps) {
-    const isVolunteered = event.volunteers.some(v => v._id === currentUserId);
-    const isCreator = event.creator._id === currentUserId;
-    const isFull = event.volunteers.length >= event.requiredVolunteers;
+    // Add null safety checks
+    const volunteers = event.volunteers || [];
+    const creator = event.creator || { _id: '', fullName: 'Unknown' };
+
+    const isVolunteered = volunteers.some(v => v?._id === currentUserId);
+    const isCreator = creator._id === currentUserId;
+    const isFull = volunteers.length >= event.requiredVolunteers;
 
     const handleJoin = () => {
         if (!isVolunteered && !isCreator && !isFull) {
@@ -55,7 +59,7 @@ export function EventCard({ event, currentUserId, onJoin, isJoining }: EventCard
                         {isCreator && <Badge variant="secondary">Host</Badge>}
                         {isVolunteered && <Badge variant="default" className="bg-green-600">Joined</Badge>}
                     </div>
-                    <p className="text-sm text-muted-foreground">Hosted by {event.creator.fullName}</p>
+                    <p className="text-sm text-muted-foreground">Hosted by {creator.fullName}</p>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="grid gap-2 text-sm">
@@ -73,7 +77,7 @@ export function EventCard({ event, currentUserId, onJoin, isJoining }: EventCard
                         </div>
                         <div className="flex items-center gap-2 text-muted-foreground">
                             <Users size={16} />
-                            <span>{event.volunteers.length} / {event.requiredVolunteers} Volunteers</span>
+                            <span>{volunteers.length} / {event.requiredVolunteers} Volunteers</span>
                         </div>
                     </div>
                 </CardContent>
@@ -103,10 +107,10 @@ export function EventCard({ event, currentUserId, onJoin, isJoining }: EventCard
                         <DialogTitle>Volunteers for {event.name}</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4 max-h-[60vh] overflow-y-auto">
-                        {event.volunteers.length === 0 ? (
+                        {volunteers.length === 0 ? (
                             <p className="text-center text-muted-foreground py-4">No volunteers yet.</p>
                         ) : (
-                            event.volunteers.map(volunteer => (
+                            volunteers.map(volunteer => (
                                 <div key={volunteer._id} className="flex items-center gap-3 p-2 rounded-lg border">
                                     <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
                                         {volunteer.avatar ? (

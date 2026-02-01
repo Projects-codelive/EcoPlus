@@ -72,14 +72,33 @@ router.post('/create', verifyToken, upload.array('images', 3), async (req, res) 
         res.status(500).json({ message: 'Server error' });
     }
 });
+``
+// Debug endpoint to check post count (no auth required)
+router.get('/debug/count', async (req, res) => {
+    try {
+        const count = await Post.countDocuments();
+        const posts = await Post.find().select('_id content createdAt').limit(5).sort({ createdAt: -1 });
+        res.json({
+            totalPosts: count,
+            message: `Database has ${count} posts`,
+            recentPosts: posts
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
 // Get Feed
 router.get('/feed', verifyToken, async (req, res) => {
     try {
+        const limit = parseInt(req.query.limit) || 50; // Default to 50 posts
         const posts = await Post.find()
             .sort({ createdAt: -1 })
+            .limit(limit)
             .populate('userId', 'fullName points')
             .populate('comments.userId', 'fullName points');
+
+        console.log(`Fetched ${posts.length} posts from database`);
         res.json(posts);
     } catch (error) {
         console.error('Fetch Feed Error:', error);
@@ -90,10 +109,14 @@ router.get('/feed', verifyToken, async (req, res) => {
 // Get User Posts
 router.get('/user/:userId', verifyToken, async (req, res) => {
     try {
+        const limit = parseInt(req.query.limit) || 50; // Default to 50 posts
         const posts = await Post.find({ userId: req.params.userId })
             .sort({ createdAt: -1 })
+            .limit(limit)
             .populate('userId', 'fullName points')
             .populate('comments.userId', 'fullName points');
+
+        console.log(`Fetched ${posts.length} posts for user ${req.params.userId}`);
         res.json(posts);
     } catch (error) {
         console.error('Fetch User Posts Error:', error);

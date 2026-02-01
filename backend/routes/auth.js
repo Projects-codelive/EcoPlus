@@ -8,7 +8,26 @@ const router = express.Router();
 // Register
 router.post('/register', async (req, res) => {
     try {
+        // Debug logging
+        console.log('=== REGISTER REQUEST ===');
+        console.log('Headers:', req.headers);
+        console.log('Body:', req.body);
+        console.log('Content-Type:', req.headers['content-type']);
+
         const { fullName, mobileNo, password } = req.body;
+
+        // Validate required fields
+        if (!fullName || !mobileNo || !password) {
+            console.log('Missing fields:', { fullName: !!fullName, mobileNo: !!mobileNo, password: !!password });
+            return res.status(400).json({
+                message: 'All fields are required',
+                missing: {
+                    fullName: !fullName,
+                    mobileNo: !mobileNo,
+                    password: !password
+                }
+            });
+        }
 
         // Check if user exists
         const existingUser = await User.findOne({ mobileNo });
@@ -44,7 +63,7 @@ router.post('/register', async (req, res) => {
 
     } catch (error) {
         console.error("Register Error:", error);
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
 });
 

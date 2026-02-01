@@ -31,9 +31,14 @@ export function EventForm({ onSubmit, isLoading }: EventFormProps) {
         },
     });
 
+    const handleFormSubmit = async (values: z.infer<typeof formSchema>) => {
+        await onSubmit(values);
+        form.reset(); // Reset form after successful submission
+    };
+
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4">
                 <FormField
                     control={form.control}
                     name="name"

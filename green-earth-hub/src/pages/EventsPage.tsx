@@ -60,6 +60,21 @@ export default function EventsPage() {
         if (user) {
             fetchNotifications();
         }
+
+        // Auto-refresh events every 30 seconds
+        const eventInterval = setInterval(() => {
+            fetchEvents();
+        }, 30000);
+
+        // Auto-refresh notifications every 60 seconds if user is logged in
+        const notificationInterval = user ? setInterval(() => {
+            fetchNotifications();
+        }, 60000) : null;
+
+        return () => {
+            clearInterval(eventInterval);
+            if (notificationInterval) clearInterval(notificationInterval);
+        };
     }, [user]);
 
     const handleCreateEvent = async (values: any) => {
