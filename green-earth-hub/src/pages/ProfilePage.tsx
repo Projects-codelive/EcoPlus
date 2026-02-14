@@ -7,6 +7,9 @@ import { API_BASE } from '@/lib/api';
 import { getUserLevel } from '@/utils/levelUtils';
 import { AvatarGallery } from '@/components/profile/AvatarGallery';
 import { BadgeList } from '@/components/profile/BadgeList';
+import { SettingsModal } from '@/components/profile/SettingsModal';
+import { PrivacyModal } from '@/components/profile/PrivacyModal';
+import { HelpSupportModal } from '@/components/profile/HelpSupportModal';
 import { toast } from 'sonner';
 
 const ProfilePage = () => {
@@ -18,6 +21,9 @@ const ProfilePage = () => {
     lastActiveDate: null
   });
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   // Fallback safe user for fetching visual data
   const safeUser = user || {
@@ -201,9 +207,9 @@ const ProfilePage = () => {
           {[
             { icon: UserIcon, label: 'Avatars', action: 'View Gallery', onClick: () => setIsGalleryOpen(true) },
             { icon: Bell, label: 'Notifications', action: 'Enabled' },
-            { icon: Shield, label: 'Privacy', action: '' },
-            { icon: HelpCircle, label: 'Help & Support', action: '' },
-            { icon: Settings, label: 'Settings', action: '' },
+            { icon: Shield, label: 'Privacy', action: '', onClick: () => setIsPrivacyOpen(true) },
+            { icon: HelpCircle, label: 'Help & Support', action: '', onClick: () => setIsHelpOpen(true) },
+            { icon: Settings, label: 'Settings', action: '', onClick: () => setIsSettingsOpen(true) },
           ].map((item) => {
             const Icon = item.icon;
             return (
@@ -223,12 +229,10 @@ const ProfilePage = () => {
           })}
         </div>
 
-        {/* Gallery Modal */}
-        <AvatarGallery
-          isOpen={isGalleryOpen}
-          onClose={() => setIsGalleryOpen(false)}
-          userPoints={safeUser.points}
-        />
+        {/* Modals */}
+        <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+        <PrivacyModal isOpen={isPrivacyOpen} onClose={() => setIsPrivacyOpen(false)} />
+        <HelpSupportModal isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />
 
         {/* Logout */}
         <button

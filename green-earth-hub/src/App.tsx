@@ -16,6 +16,7 @@ import LandingPage from "./pages/LandingPage";
 import SharedProfilePage from "./pages/SharedProfilePage";
 import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
 import ClimateMapPage from "./pages/ClimateMapPage";
 import EventsPage from "./pages/EventsPage";
@@ -24,39 +25,41 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner position="top-center" />
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+    <ThemeProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner position="top-center" />
+        <AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
 
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/share/:userId" element={<SharedProfilePage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/share/:userId" element={<SharedProfilePage />} />
 
-            {/* Protected Routes */}
-            <Route element={<ProtectedRoute />}>
-              <Route path="/dashboard" element={<Index />} />
-              <Route path="/track" element={<TrackPage />} />
-              <Route path="/learn" element={<LearnPage />} />
-              <Route path="/leaderboard" element={<LeaderboardPage />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/social" element={<SocialPage />} />
-              <Route path="/social/user/:userId" element={<UserFeedPage />} />
-              <Route path="/map" element={<ClimateMapPage />} />
-              <Route path="/events" element={<EventsPage />} />
-            </Route>
+              {/* Protected Routes */}
+              <Route element={<ProtectedRoute />}>
+                <Route path="/dashboard" element={<Index />} />
+                <Route path="/track" element={<TrackPage />} />
+                <Route path="/learn" element={<LearnPage />} />
+                <Route path="/leaderboard" element={<LeaderboardPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/social" element={<SocialPage />} />
+                <Route path="/social/user/:userId" element={<UserFeedPage />} />
+                <Route path="/map" element={<ClimateMapPage />} />
+                <Route path="/events" element={<EventsPage />} />
+              </Route>
 
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
-    </TooltipProvider>
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
+      </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 
